@@ -31,6 +31,7 @@ public class CategoryBrand extends BaseIdEntity {
     private static final long serialVersionUID = 3315719881926878L;
 
 
+
     @CreatedBy
     @TableField(fill = FieldFill.INSERT)
     @ApiModelProperty(value = "创建者", hidden = true)
