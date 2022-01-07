@@ -15,6 +15,7 @@ echo '开始启动jenkins'
 #2 Action to choose zcfx/openauth:${BUILD_NUMBER}
 #2 Start/Stop Docker Containers
 #2 Action to choose zcfx/openauth:${BUILD_NUMBER}
+
 mkdir /home/jenkins_home
 chmod 777 -R /home/jenkins_home
 docker run -d -p 8080:8080 -p 50000:50000 -v /home/jenkins_home:/var/jenkins_home jenkins/jenkins
