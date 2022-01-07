@@ -81,13 +81,13 @@
 
 echo '开始启动harbor'
 cd /home
-mkdir harbor-keys
-cd harbor-keys
-openssl genrsa -out rsa_private.key 2048
+# mkdir harbor-keys
+# cd harbor-keys
+# openssl genrsa -out rsa_private.key 2048
 # 这一步需要填一些东西，记得别填密码，另外 Common Name 填域名或者host里对应当前ip的值(如：master)
-openssl req -new -key rsa_private.key -out rsa_private.csr
-openssl x509 -req -days 365 -in rsa_private.csr -signkey rsa_private.key -out rsa_private.crt
-cd ..
+# openssl req -new -key rsa_private.key -out rsa_private.csr
+# openssl x509 -req -days 365 -in rsa_private.csr -signkey rsa_private.key -out rsa_private.crt
+# cd ..
 wget https://github.com/goharbor/harbor/releases/download/v2.1.0/harbor-offline-installer-v2.1.0.tgz
 tar zxvf harbor-offline-installer-v2.1.0.tgz
 mkdir harbor
