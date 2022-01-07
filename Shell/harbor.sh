@@ -93,6 +93,7 @@ tar zxvf harbor-offline-installer-v2.1.0.tgz
 mkdir harbor
 cd harbor/
 cp harbor.yml.tmpl harbor.yml
+# 可以先注釋調https
 vim harbor.yml
     hostname: 192.168.0.28
     https:
