@@ -1,0 +1,65 @@
+services:
+  mysql-master:
+    container_name: mysql-master
+    image: hub.c.163.com/library/mysql:5.7
+    #主要是设置 lig-bin
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --server-id=201 --log-bin=mysql-master-bin --relay_log=ep-mysql-relay-bin --read_only=1
+    environment:
+      - TZ=Asia/Shanghai
+      # mysql密码
+      - MYSQL_ROOT_PASSWORD=123456
+    ports:
+      - 3306:3306
+
+  mysql-slave-1:
+    container_name: mysql-slave-1
+    image: hub.c.163.com/library/mysql:5.7
+
+    # relay_log主要是用来 连级复制   &#xff0c; 需开启自身的binlog
+    # command: --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --server-id&#61;202 --log-bin&#61;mysql-slave-bin --relay_log&#61;ep-mysql-relay-bin  --read_only&#61;1
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --server-id=202
+
+    environment:
+      - TZ=Asia/Shanghai
+      # mysql密码
+      - MYSQL_ROOT_PASSWORD=123456
+
+    ports:
+      - 3307:3306
+    # network就不写了 docker 会创建一个 mysql_default的网络。
+
+  mysql-slave-2:
+    container_name: mysql-slave-2
+    image: hub.c.163.com/library/mysql:5.7
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci --server-id=203
+    environment:
+      - TZ=Asia/Shanghai
+      # mysql密码
+      - MYSQL_ROOT_PASSWORD=123456
+    ports:
+      - 3308:3306
+       #用到的sql &#xff1a;</h3>
+       #master.sql
+        #创建用户供从机&#xff08;slave&#xff09;来读取文件
+        CREATE USER ='slave'@'%' IDENTIFIED BY ='123456';
+        GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO ='slave'@'%';
+        #<span class="token comment">#查看 master 状态 主要是看   file 和 posttion 供从机使用
+        show master status;
+        #</code></pre>
+        #<pre><code class="prism language-bash"><span class="token comment"># change master to master_host&#61;'mysql-master', master_user&#61;'slave', master_password&#61;'123456', master_port&#61;3306, 
+        #<span class="token comment">#     master_log_file&#61;'mysql-master-bin.000003', master_log_pos&#61; 2030, master_connect_retry&#61;30;
+        #<span class="token comment"># master_host&#61;'mysql-master' 这里用了docker的网络&#xff0c;也可以自己去找对应的ip
+        change master to master_host='mysql-master', master_port3306,
+        master_log_file='mysql-master-bin.000003', master_log_pos 609, master_connect_retry30;
+
+        #<span class="token comment"># mysql 推荐 START SLAVE  时指定用户名密码&#xff0c;而不是写到上边的change master里
+        START SLAVE USER='slave' PASSWORD='123456'
+        #<span class="token comment"># 相关命令&#xff1a; 停止 SLAVE 行为
+        STOP SLAVE
+        #<span class="token comment"># 相关命令&#xff1a; 停止 SLAVE 行为
+        show slave status
+
+      ALTER USER 'root'@'localhost' IDENTIFIED BY 'password' PASSWORD EXPIRE NEVER; #修改加密规则
+      ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password'; #更新一下用户的密码
+
+      FLUSH PRIVILEGES; #刷新权限
