@@ -49,8 +49,8 @@ services:
         #<pre><code class="prism language-bash"><span class="token comment"># change master to master_host&#61;'mysql-master', master_user&#61;'slave', master_password&#61;'123456', master_port&#61;3306, 
         #<span class="token comment">#     master_log_file&#61;'mysql-master-bin.000003', master_log_pos&#61; 2030, master_connect_retry&#61;30;
         #<span class="token comment"># master_host&#61;'mysql-master' 这里用了docker的网络&#xff0c;也可以自己去找对应的ip
-        change master to master_host='mysql-master', master_port3306,
-        master_log_file='mysql-master-bin.000003', master_log_pos 609, master_connect_retry30;
+        change master to master_host='mysql-master', master_port=3306,
+        master_log_file='mysql-master-bin.000003', master_log_pos=609, master_connect_retry=30;
 
         #<span class="token comment"># mysql 推荐 START SLAVE  时指定用户名密码&#xff0c;而不是写到上边的change master里
         START SLAVE USER='slave' PASSWORD='123456'
